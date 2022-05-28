@@ -1,0 +1,1 @@
+postgresql://postgres:Blue_sky7@localhost:5432/SE4G
