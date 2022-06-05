@@ -35,35 +35,36 @@ whole_df = pd.json_normalize(data['data']['entries'])
 data_df = whole_df.drop(['ec5_uuid','created_at','uploaded_at', 'title','1_Samplers_First_Nam','16_Upstream_photo','17_Downstream_photo','18_Which_method_did_','21_Which_method_did_'], axis = 1)
 # rename All Columns in the dataset //df.set_axis (['new_col1', 'new_col2', 'new_col3', 'new_col4'], axis='columns')//
 data_df = data_df.set_axis(['Location_site', 'Sample_Type', 'Date', 'Time', 'Nearest_USGS', 'Streamflow_cfs', 'Sample:wet/dry', 'Weather_c', 'Airtemp_C', 'Water_level', 'Water_odor', 'Water_color', 'Observed_use', 'Watertemp_C', 'Conductivity_Scm', 'Obs/Comments', 'Bacteria_Lvl(MPN/100ml)', 'Nitrate(mg/L)', 'latitude', 'longitude', 'accuracy', 'UTM_Northing', 'UTM_Easting', 'UTM_Zone'], axis='columns')
-# a back-up database is stored in a csv file
-data_df.to_csv(r'C:/Users/abbma/Documents/Software/projet/test-ahmedClean_db.txt')
 
 # creating new columns with numeric coordinate and accuracy values
 data_df['latitude'] = pd.to_numeric(data_df['latitude'], errors='coerce')
 data_df['longitude'] = pd.to_numeric(data_df['longitude'], errors='coerce')
 data_df['accuracy'] = pd.to_numeric(data_df['accuracy'], errors='coerce')
+data_clean1 = data_df.loc[data_df['accuracy']<=5]
 
-# eliminating outlayers
-clean_data = data_df.loc[data_df['accuracy']<=5]
+#%%
 
+# a back-up database is stored in a csv file
+data_clean1.to_csv(r'C:/Users/abbma/Documents/Software/projet/test-ahmedClean_db.txt')
 
 # from Pandas DataFrame to GeoPandas GeoDataFrame
-data_gdf = gpd.GeoDataFrame(clean_data, geometry=gpd.points_from_xy(clean_data.longitude, clean_data.latitude))
+data_gdf = gpd.GeoDataFrame(data_clean1, geometry=gpd.points_from_xy(data_clean1['longitude'], data_clean1['latitude']), crs="EPSG:32618")
 # setting up the reference system for the geodesic coordinates in WGS84
-data_gdf= data_gdf.set_crs(epsg=32618, inplace=True)
+#data_gdf.set_crs(epsg=32618)
 
 #%%
 
 """ EXPORTING DATA TO DBMS """
 """------------------------"""
 # setup db connection (generic connection path to be update with your credentials:
-#'postgresql://postgres:postgres@localhost:5432/se4g')
+
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/se4g')
 
 # data_df.to_sql('BRWC water quality monitoring', engine, if_exists = 'replace', index=False)
+
 data_gdf.to_postgis('PRWC', engine, if_exists = 'replace', index=False)
 
 #%%
 
-clean_data1 = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry')
-clean_data1.plot()
+clean_data = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry')
+clean_data1 = clean_data.to_crs(epsg=3857)
