@@ -2,7 +2,7 @@
 """
 Created on Sat May 28 14:06:47 2022
 
-@author: A.Mukhtar
+@author: Group7
 """
 
 import json
@@ -15,7 +15,9 @@ from sqlalchemy import create_engine
 cleanup = (
         'DROP TABLE IF EXISTS sys_table CASCADE',
         'DROP TABLE IF EXISTS comment_table',
-        'DROP TABLE IF EXISTS data_table'
+        'DROP TABLE IF EXISTS data_table',
+        'DROP TABLE IF EXISTS contact',
+        'DROP TABLE IF EXISTS post'
         )
 
 commands =(
@@ -51,17 +53,38 @@ commands =(
                     REFERENCES sys_table (userid)
         )
         """
-        
+        ,
+        """ 
+        CREATE TABLE post (
+                post_id SERIAL PRIMARY KEY,
+                author_id INTEGER NOT NULL,
+                created TIMESTAMP DEFAULT NOW(),
+                title VARCHAR(350) NOT NULL,
+                body VARCHAR(500) NOT NULL,
+                FOREIGN KEY (author_id)
+                    REFERENCES sys_table (userid)
+        )
+        """
         )
 
-conn = connect("dbname=SE4G user=postgres password=Blue_sky7")
+sqlCommands = (
+        'INSERT INTO sys_table (username, password, email) VALUES (%s, %s, %s) RETURNING userid',
+        'INSERT INTO post (title, body, author_id) VALUES (%s, %s, %s)'
+        )
+
+conn = connect("dbname=SE4GI user=postgres password=postgres")
 cur = conn.cursor()
-
-for command in cleanup:
+for command in cleanup :
     cur.execute(command)
-for command in commands:
+for command in commands :
     cur.execute(command)
+    print('execute command')
 
+cur.execute(sqlCommands[0], ('Giuseppe', '3ety3e7', 'user@admin.com'))
+userId = cur.fetchone()[0]
+cur.execute(sqlCommands[1], ('My First Post', 'This is the post body', userId))
+cur.execute('SELECT * FROM post')
+print(cur.fetchall())
 
 
 cur.close()
@@ -71,4 +94,4 @@ conn.close()
 
 
 
-engine = create_engine('postgresql://postgres:Blue_sky7@localhost:5432/SE4G')
+engine = create_engine('postgresql://postgres:postgres@localhost:5432/SE4GI')
