@@ -43,8 +43,12 @@ data_df['latitude'] = pd.to_numeric(data_df['latitude'], errors='coerce')
 data_df['longitude'] = pd.to_numeric(data_df['longitude'], errors='coerce')
 data_df['accuracy'] = pd.to_numeric(data_df['accuracy'], errors='coerce')
 
+# eliminating outlayers
+clean_data = data_df.loc[data_df['accuracy']<=5]
+
+
 # from Pandas DataFrame to GeoPandas GeoDataFrame
-data_gdf = gpd.GeoDataFrame(data_df, geometry=gpd.points_from_xy(data_df.longitude, data_df.latitude))
+data_gdf = gpd.GeoDataFrame(clean_data, geometry=gpd.points_from_xy(clean_data.longitude, clean_data.latitude))
 # setting up the reference system for the geodesic coordinates in WGS84
 data_gdf= data_gdf.set_crs(epsg=32618, inplace=True)
 
@@ -61,5 +65,5 @@ data_gdf.to_postgis('PRWC', engine, if_exists = 'replace', index=False)
 
 #%%
 
-clean_data = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry')
-clean_data.plot()
+clean_data1 = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry')
+clean_data1.plot()
