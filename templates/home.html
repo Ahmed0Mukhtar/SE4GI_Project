@@ -1,3 +1,4 @@
+{% extends "start.html" %}
 <!DOCTYPE HTML>
 <!--
 	Alpha by HTML5 UP
@@ -6,11 +7,15 @@
 -->
 <html>
 	<head>
-		<title>WQM</title>
+		<title>{% block title %}{% endblock %} - WQM</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	{% block stylesheets %}
 		<link rel="stylesheet" href="../static/assets/css/main.css" />
+	{% endblock %}
 	</head>
+
+{% block body %}
 	<body class="landing is-preload">
 		<div id="page-wrapper">
 
@@ -19,9 +24,23 @@
 					<h1><a href="/home">Water Quality Monitoring</a> by Group (7)</h1>
 					<nav id="nav">
 						<ul>
-							<li><a href="/home">Home</a></li>
 							<li>
-								<a href="#" class="icon solid fa-angle-down">Layouts</a>
+							{% if g.user %}
+								Welcome {{ g.user[1] }}!
+							{% endif %}
+							</li>
+							<li>
+							{% if g.user %}
+								
+								<li><a href="/logout">Log Out</a></li>
+								
+							{% endif %}
+							</li>
+							
+							<li><a href="/home">Home</a></li>
+							
+							<li>
+								<a href="" class="icon solid fa-angle-down">Layouts</a>
 								<ul>
 									<li><a href="/generic">Generic</a></li>
 									<li><a href="/elements">Elements</a></li>
@@ -33,7 +52,7 @@
 						</ul>
 					</nav>
 				</header>
-
+		
 			<!-- Banner -->
 				<section id="banner">
 					<ul class="icons">
@@ -46,7 +65,7 @@
 					<h2>WQM</h2>
 					<h3>A Web-Based Application for Water quality monitoring
 					<br />of the Pomperaug river</h3>
-					
+
 				</section>
 
 			<!-- Main -->
@@ -63,8 +82,6 @@
 						<!-- </header> -->
 						<!-- <span class="image featured"><img src="../static/images/pic01.jpg" alt="" /></span> -->
 					</section>
-
-
 
 						<div class="row">
 						<div class="col-12">
@@ -140,8 +157,6 @@
 									<p style="text-align:justify;"><span class="../static/image right"><img src="images/pic05.jpg" alt="" /></span>content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content content. </p>
 								</section>
 
-
-
 								<section class="box">
 									<h3>Image</h3>
 									<h4>Fit</h4>
@@ -155,7 +170,7 @@
 						</div>
 					</div>
 				</section>
-
+		
 			<!-- CTA -->
 				<!-- <section id="cta">
 
@@ -182,7 +197,7 @@
 				</footer>
 
 		</div>
-
+		{% block javascript %}
 		<!-- Scripts -->
 			<script src="../static/assets/js/jquery.min.js"></script>
 			<script src="../static/assets/js/jquery.dropotron.min.js"></script>
@@ -192,6 +207,7 @@
 			<script src="../static/assets/js/util.js"></script>
 			<script src="../static/assets/js/main.js"></script>
 			<script src="../static/assets_SP/js/main1.js"></script>
-
+		{% endblock %}
 	</body>
+{% endblock %}
 </html>
