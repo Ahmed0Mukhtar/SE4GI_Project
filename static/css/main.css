@@ -1,6 +1,16 @@
 
 
 
+/* flash_style made by group 7 */
+.flashes{
+  text-align: center;
+  font-size:large;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+  font-style: oblique;
+  color:#e20000;
+  background-color: #fff;
+  
+}
 
 /*//////////////////////////////////////////////////////////////////
 [ FONT ]*/
@@ -24,7 +34,6 @@
   font-family: Poppins-SemiBold;
   src: url('../fonts/poppins/Poppins-SemiBold.ttf'); 
 }
-
 
 
 
@@ -547,16 +556,7 @@ iframe {
   }
 }
 
-/* flash_style made by group 7*/
-.flashes{
-  text-align: center;
-  font-size:x-large;
-  font-family:Verdana, Geneva, Tahoma, sans-serif;
-  font-style: oblique;
-  color:#9152f8;
-  background-color: #f4f5f0;
 
-}
 
 
 
