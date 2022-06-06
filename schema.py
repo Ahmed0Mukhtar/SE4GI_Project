@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat May 28 14:06:47 2022
-
 @author: Group7
 """
 
@@ -14,7 +12,6 @@ from sqlalchemy import create_engine
 
 cleanup = (
         'DROP TABLE IF EXISTS sys_table CASCADE',
-        'DROP TABLE IF EXISTS comment_table',
         'DROP TABLE IF EXISTS data_table',
         'DROP TABLE IF EXISTS contact',
         'DROP TABLE IF EXISTS post'
@@ -31,24 +28,12 @@ commands =(
         """
         ,
         """
-        CREATE TABLE comment_table (
-            comment_id SERIAL PRIMARY KEY,
-            userid INTEGER NOT NULL UNIQUE,
-            created TIMESTAMP DEFAULT NOW(),
-            comment VARCHAR(500) NOT NULL,
-            FOREIGN KEY (userid)
-                    REFERENCES sys_table (userid)
- 
-        )
-        """
-        ,
-         """
         CREATE TABLE contact (
             userid INTEGER NOT NULL UNIQUE,
             name VARCHAR(500) NOT NULL,
             email VARCHAR(500) NOT NULL,
+            subject VARCHAR(500),
             message VARCHAR(500) NOT NULL,
-            Guest VARCHAR(500),
             FOREIGN KEY (userid)
                     REFERENCES sys_table (userid)
         )
