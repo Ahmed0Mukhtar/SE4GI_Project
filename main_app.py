@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue May 31 17:17:43 2022
-
 @author: Group7
 """
 
@@ -16,8 +14,7 @@ from psycopg2 import connect
 app = Flask(__name__,template_folder='templates')
 app.secret_key = b'[\xb92G8\xcf\xba.I\xd1m\xb2\xf3\xea4\x93\xe5\xa0g\x93\x91\xbb\x81\xeb'
 
-# Create a URL route in our application for "/" and other html pages
- 
+
 @app.route('/Signup', methods=('POST', 'GET'))
 @app.route('/signup', methods=('POST', 'GET'))
 def signup():
@@ -40,11 +37,18 @@ def signup():
             cur = conn.cursor()
             cur.execute(
             'SELECT userid FROM sys_table WHERE username = %s', (username,))
-            if cur.fetchone() is not None:
-                error = 'User {} is already registered.'.format(username)
+            check_username = cur.fetchone()
+            cur.execute(
+            'SELECT userid FROM sys_table WHERE email = %s', (email,))
+            check_email = cur.fetchone()
+            if check_username is not None:
+                error = 'Username {} already exists. try another one!'.format(username)
                 cur.close()
+            elif check_email is not None:
+                error = 'The email already exists.'
+                cur.close()
+                conn.commit()
                 conn.close()
-
         if error is None:
             cur.execute(
                 'INSERT INTO sys_table (username, password, email) VALUES (%s, %s, %s)',
@@ -79,12 +83,10 @@ def login():
         cur.close()
         conn.commit()
         conn.close()
-
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user[2], password):
             error = 'Incorrect password.'
-
         if error is None:
             session.clear()
             session['userid'] = user[0]
@@ -125,7 +127,7 @@ def load_logged_in_user():
         return True
     
     
-
+# Create a URL route in our application for "/" and other html pages
 @app.route('/')
 @app.route('/start')
 def start():
@@ -150,19 +152,62 @@ def home():
     load_logged_in_user()
 
     return render_template('home.html', posts=posts)
+   
+   
+   @app.route('/contact', methods=('POST', 'GET'))
+def contact():
+    if request.method == 'POST':
+        name = request.form['name']
+        email    = request.form['email']
+        subject = request.form['subject']
+        message = request.form['message']
+        myFile = open('dbConfig.txt')
+        connStr = myFile.readline()
+        conn = connect(connStr)
+        cur = conn.cursor()
+        error    = None
+        note = None
+        cur.execute(
+            'SELECT userid FROM sys_table WHERE email = %s', (email,)
+        )
+        userid = cur.fetchone()
+        if userid is None:
+            error = 'register first to send message!'
+            cur.close()
+        else:
+            cur.execute(
+                'SELECT userid FROM contact WHERE userid = %s', (userid,)
+            )
+            if cur.fetchone() is not None:
+                error = 'You already sent your message!'
+                cur.close()
+                conn.commit()
+                conn.close()
+            else:
+                cur.execute(
+                    'INSERT INTO contact (userid, name, email,subject, message) VALUES (%s, %s, %s, %s, %s)',
+                    (userid, name, email, subject, message)
+                )
+                error = 'Thank you! Your message was sent successfully. We will respond as soon as possible.'
+                cur.close()
+                conn.commit()
+                conn.close()
+          
+        flash(error)
+    return render_template('contact.html')
 
 @app.route('/generic')
 def generic():
      return render_template('generic.html')
 
+@app.route('/elements')
+def elements():
+     return render_template('elements.html')
+
 @app.route('/about_us')
 def about_us():
      return render_template('about_us.html')
  
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
 
 # If we're running in stand alone mode, run the application
 if __name__ == '__main__':
