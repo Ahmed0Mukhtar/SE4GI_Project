@@ -34,21 +34,50 @@ whole_df = pd.json_normalize(data['data']['entries'])
 # Remove unuseful data 
 data_df = whole_df.drop(['ec5_uuid','created_at','uploaded_at', 'title','1_Samplers_First_Nam','16_Upstream_photo','17_Downstream_photo','18_Which_method_did_','21_Which_method_did_'], axis = 1)
 # rename All Columns in the dataset //df.set_axis (['new_col1', 'new_col2', 'new_col3', 'new_col4'], axis='columns')//
-data_df = data_df.set_axis(['Location_site', 'Sample_Type', 'Date', 'Time', 'Nearest_USGS', 'Streamflow_cfs', 'Sample:wet/dry', 'Weather_c', 'Airtemp_C', 'Water_level', 'Water_odor', 'Water_color', 'Observed_use', 'Watertemp_C', 'Conductivity_Scm', 'Obs/Comments', 'Bacteria_Lvl(MPN/100ml)', 'Nitrate(mg/L)', 'latitude', 'longitude', 'accuracy', 'UTM_Northing', 'UTM_Easting', 'UTM_Zone'], axis='columns')
+data_df = data_df.set_axis(['Location', 'Sample:regular', 'Date', 'Time', 'Nearest_USGS', 'Streamflow_cfs', 'Sample:wet', 'Weather', 'Air_temp_C', 'Water_level', 'Water_odor', 'Water_color', 'Observed_use', 'Water_temp_C', 'Conductivity_Scm', 'Comments', 'Bacteria_MPNper100ml', 'Nitrate_mgperL', 'latitude', 'longitude', 'accuracy', 'UTM_Northing', 'UTM_Easting', 'UTM_Zone'], axis='columns')
 
 # creating new columns with numeric coordinate and accuracy values
 data_df['latitude'] = pd.to_numeric(data_df['latitude'], errors='coerce')
 data_df['longitude'] = pd.to_numeric(data_df['longitude'], errors='coerce')
 data_df['accuracy'] = pd.to_numeric(data_df['accuracy'], errors='coerce')
-data_clean1 = data_df.loc[data_df['accuracy']<=5]
+data_df = data_df.loc[data_df['accuracy']<=5]
+
+#removing weird values from bacteria concentration column
+data_clean=data_df
+data_clean['Bacteria_MPNper100ml'] = data_df['Bacteria_MPNper100ml'].mask(data_df['Bacteria_MPNper100ml']=='2420+',2420)
+data_clean['Bacteria_MPNper100ml'] = pd.to_numeric(data_clean['Bacteria_MPNper100ml'], errors='coerce')
+data_clean  = data_clean[data_df['Bacteria_MPNper100ml'].notnull()]
+
+#creating a function for classifying water per bacteria concentration
+def waterclass(val):
+    if val<=235:
+        return 0
+    elif 235<val<=575:
+        return 1
+    elif 575<val :
+        return 2
+    
+data_clean['Water_class']=data_clean.apply(lambda row: waterclass(row['Bacteria_MPNper100ml']),axis=1)
+
+#creating a function for classifying water per bacteria concentration
+def wateruses(val):
+    if val == 0:
+        return ('Swimming','Wading','Fishing','Boating')
+    elif val == 1:
+        return ('Boating','Fishing')
+    elif val==2 :
+        return ('')
+
+data_clean['Safe_uses']=data_clean.apply(lambda row: wateruses(row['Water_class']),axis=1)
+
 
 #%%
 
 # a back-up database is stored in a csv file
-data_clean1.to_csv(r'C:/Users/abbma/Documents/Software/projet/test-ahmedClean_db.txt')
+data_clean.to_csv(r'C:/Users/abbma/Documents/Software/projet/test-ahmedClean_db.txt')
 
 # from Pandas DataFrame to GeoPandas GeoDataFrame
-data_gdf = gpd.GeoDataFrame(data_clean1, geometry=gpd.points_from_xy(data_clean1['longitude'], data_clean1['latitude']), crs="EPSG:32618")
+data_gdf = gpd.GeoDataFrame(data_clean, geometry=gpd.points_from_xy(data_clean['longitude'], data_clean['latitude']), crs="EPSG:4326")
 # setting up the reference system for the geodesic coordinates in WGS84
 #data_gdf.set_crs(epsg=32618)
 
@@ -66,5 +95,4 @@ data_gdf.to_postgis('PRWC', engine, if_exists = 'replace', index=False)
 
 #%%
 
-clean_data = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry')
-clean_data1 = clean_data.to_crs(epsg=3857)
+data_clean = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry')
