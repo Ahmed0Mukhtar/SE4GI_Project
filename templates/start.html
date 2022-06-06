@@ -1,104 +1,91 @@
-
+<!DOCTYPE html>
+<html lang="en">
 	<head>
-		<title>{% block title %}{% endblock %}-BLUE SKY</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="icon" type="image/png" href="../static/images/icons/bluesky.ico"/>
+		<title>{% block title %}{% endblock %} - Welcom WQM</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!--===============================================================================================-->
 	{% block stylesheets %}
-		<link rel="stylesheet" href="../static/assets/css/main.css" />
+		<link rel="stylesheet" type="text/css" href="../static/vendor/bootstrap/css/bootstrap.min.css">
+	<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="../static/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="../static/fonts/iconic/css/material-design-iconic-font.min.css">
+	<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="../static/vendor/animate/animate.css">
+	<!--===============================================================================================-->	
+		<link rel="stylesheet" type="text/css" href="../static/vendor/css-hamburgers/hamburgers.min.css">
+	<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="../static/vendor/animsition/css/animsition.min.css">
+	<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="../static/vendor/select2/select2.min.css">
+	<!--===============================================================================================-->	
+		<link rel="stylesheet" type="text/css" href="../static/vendor/daterangepicker/daterangepicker.css">
+	<!--===============================================================================================-->
+		<link rel="stylesheet" type="text/css" href="../static/css/util.css">
+		<link rel="stylesheet" type="text/css" href="../static/css/main.css">
 	{% endblock %}
+	<!--===============================================================================================-->
 	</head>
-	
-{% block body %}
-	<body class="is-preload">
-		<div id="page-wrapper">
 
-			<!-- Header -->
-				<header id="header">
-					<h1><a href="/home">Water Quality Monitoring</a> by Group (7)</h1>
-					<nav id="nav">
-						<ul>
-							<li><a href="/home">Home</a></li>
-							<li>
-								<a href="#" class="icon solid fa-angle-down">Layouts</a>
-								<ul>
-									<li><a href="/generic">Stream Monitoring</a></li>
-									<li><a href="/about_us">About Us</a></li>
-									<li><a href="/contact">Contact</a></li>
-								</ul>
-							</li>
-							<li><a href="/" class="button">Register/Sign in</a></li>
-						</ul>
-					</nav>
-				</header>
+	<body>
+	{% block body %}
+		<div class="limiter">
+			<div class="container-login100" style="background-image: url('https://s1.ibtimes.com/sites/www.ibtimes.com/files/styles/full/public/2020/08/27/water.jpg');">
+				<div class="wrap-login100">
+					
+					<form class="login100-form validate-form" method="POST">
+						<!-- logo -->
+						<span class="login100-form-logo">
+							<a class="txt"><h3><b><u>WQM</u></b></h3></a>
+						</span><br>
 
-
-			<!-- Main -->
-				<section id="main" class="container medium">
-					<div class="box">
-						{% with messages = get_flashed_messages() %}
-							{% if messages %}
-								<ul class=flashes>
-								{% for message in messages %}
-									{{ message }}
-								{% endfor %}
-								</ul>
-							{% endif %}
-						{% endwith %}
-						<div class="head">
+						<span class="login100-form-title p-b-34 p-t-27">
+							WELCOME!!
+						</span><br>	
+						<div class="container-login100-form-btn">
 							
-							<h2>Let's talk</h2>
-							<p>Tell us what you think about our little operation.</p>
+							<a class="login100-form-btn" href="/signup">sign up</a>
+							
 						</div>
-						<form method="post" action="#">
-							<div class="row gtr-50 gtr-uniform">
-								<div class="col-6 col-12-mobilep">
-									<input type="text" name="name" id="name" value="" placeholder="Name" />
-								</div>
-								<div class="col-6 col-12-mobilep">
-									<input type="email" name="email" id="email" value="" placeholder="Email" />
-								</div>
-								<div class="col-12">
-									<input type="text" name="subject" id="subject" value="" placeholder="Subject" />
-								</div>
-								<div class="col-12">
-									<textarea name="message" id="message" placeholder="Enter your message" rows="6"></textarea>
-								</div>
-								<div class="col-12">
-									<ul class="actions special">
-										<li><input type="submit" value="Send Message" /></li>
-									</ul>
-								</div>
-							</div>
-						</form>
-					</div>
-				</section>
-
-			<!-- Footer -->
-				<footer id="footer">
-					<ul class="icons">
-						<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
-						<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-						<li><a href="#" class="icon brands fa-github"><span class="label">Github</span></a></li>
-						<li><a href="#" class="icon brands fa-dribbble"><span class="label">Dribbble</span></a></li>
-						<li><a href="#" class="icon brands fa-google-plus"><span class="label">Google+</span></a></li>
-					</ul>
-					<ul class="copyright">
-						<li>&copy; Untitled. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-					</ul>
-				</footer>
-			
+						<br><br>
+						<div class="container-login100-form-btn">
+							
+							<a class="login100-form-btn" href="/login">Log in</a>
+							
+						</div><br>
+						<div class="text-center p-t-90">
+							<ul>
+							<li><a class="txt1" href="/home">Enter as Guest!</a></li>
+							</ul>	
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
-		{% block javascript %}
-		<!-- Scripts -->
-			<script src="../static/assets/js/jquery.min.js"></script>
-			<script src="../static/assets/js/jquery.dropotron.min.js"></script>
-			<script src="../static/assets/js/jquery.scrollex.min.js"></script>
-			<script src="../static/assets/js/browser.min.js"></script>
-			<script src="../static/assets/js/breakpoints.min.js"></script>
-			<script src="../static/assets/js/util.js"></script>
-			<script src="../static/assets/js/main.js"></script>
-		{% endblock %}
-	</body>
+		
+
+		<div id="dropDownSelect1"></div>
+
+	{% block javascript %}
+	<!--===============================================================================================-->
+		<script src="../static/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<!--===============================================================================================-->
+		<script src="../static/vendor/animsition/js/animsition.min.js"></script>
+	<!--===============================================================================================-->
+		<script src="../static/vendor/bootstrap/js/popper.js"></script>
+		<script src="../static/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<!--===============================================================================================-->
+		<script src="../static/vendor/select2/select2.min.js"></script>
+	<!--===============================================================================================-->
+		<script src="../static/vendor/daterangepicker/moment.min.js"></script>
+		<script src="../static/vendor/daterangepicker/daterangepicker.js"></script>
+	<!--===============================================================================================-->
+		<script src="../static/vendor/countdowntime/countdowntime.js"></script>
+	<!--===============================================================================================-->
+		<script src="../static/js/main.js"></script>
+	{% endblock %}
 {% endblock %}
+	</body>
+
+</html>
