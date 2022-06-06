@@ -155,10 +155,6 @@ def home():
 def generic():
      return render_template('generic.html')
 
-@app.route('/elements')
-def elements():
-     return render_template('elements.html')
-
 @app.route('/about_us')
 def about_us():
      return render_template('about_us.html')
