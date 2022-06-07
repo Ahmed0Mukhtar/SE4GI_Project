@@ -173,7 +173,7 @@ def home():
     # Retrieving dataset from the Database
     engine = create_engine('postgresql://postgres:Huzaifamkk14@localhost:5432/se4g')
     
-    data = gpd.GeoDataFrame.from_postgis('PRW', engine, geom_col='geometry').to_crs(3857)
+    data = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry').to_crs(3857)
     #data = data.to_crs(3857)
     
     
