@@ -1,0 +1,54 @@
+#%%
+#Importing required library (and maybe some)
+import geopandas as gpd
+from bokeh.models import ColumnDataSource
+from bokeh.plotting import figure
+from bokeh.tile_providers import CARTODBPOSITRON, get_provider
+from bokeh.layouts import row
+from sqlalchemy import create_engine
+
+
+# Retrieving dataset from the Database 
+### !!!!!WATCH OUT CORRECT USERNAME AND PASSWORD ARE GIVEN!!!!!###
+
+engine = create_engine('postgresql://postgres:postgres@localhost:5432/se4g')
+
+data = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry').to_crs(3857)
+
+# Preparing data dor plotting
+
+data['x'] = data['geometry'].x
+data['y'] = data['geometry'].y
+data_map = data.drop('geometry', axis=1)
+
+palette=["#29bbff","#f5ff1a","#ff211a"]
+colormap={i : palette[i] for i in [0,1,2]}
+colors=[colormap[x] for x in data_map.Water_class]
+data_map['colors']=colors
+
+
+# Preparing the figure
+
+#(b,d) = 41.795657, -72.860289
+#(a,c) = 41.6333328,-73.3157797
+#(a,b)_EPSG:3857 = (-8161475.26, -8110770.26), (c,d)_EPSG:3857 = (5106211.74, 5130418.82),
+
+TOOLTIPS = [
+    ("Reference gauge ", "@Nearest_USGS"),
+    ("Date of aquisition of the sample", "@Date"),
+    ("Bacteria level (MPN/100ml)", "@Bacteria_MPNper100ml")
+    ]
+
+cds = ColumnDataSource(data_map)
+
+MAP = figure(title='Bacteria Map', 
+           width = 700, height = 700,
+           x_range = (-8170850.62, -8131888.80), y_range = (5071521.81, 5116146.29),
+           x_axis_type="mercator", y_axis_type="mercator", 
+           tooltips=TOOLTIPS)
+
+MAP.add_tile(get_provider(CARTODBPOSITRON))
+
+MAP.scatter(x='x', y='y', source=cds, marker="inverted_triangle", line_color='black', fill_color='colors', size = 20)
+
+#%%
