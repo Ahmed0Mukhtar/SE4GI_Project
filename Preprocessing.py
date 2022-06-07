@@ -40,7 +40,7 @@ data_df = data_df.set_axis(['Location', 'Sample:regular', 'Date', 'Time', 'Neare
 data_df['latitude'] = pd.to_numeric(data_df['latitude'], errors='coerce')
 data_df['longitude'] = pd.to_numeric(data_df['longitude'], errors='coerce')
 data_df['accuracy'] = pd.to_numeric(data_df['accuracy'], errors='coerce')
-data_df['Date'] = pd.to_datetime(data_df['Date'], errors='coerce')
+#data_df['Date'] = pd.to_datetime(data_df['Date'], errors='coerce')
 
 data_df = data_df.loc[data_df['accuracy']<=5]
 data_df = data_df.sort_values(by=['Date'], ascending=True)
