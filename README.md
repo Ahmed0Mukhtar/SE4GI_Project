@@ -19,5 +19,5 @@
             
 3- From the repository, download the file preprocessing.py, and modify the line 86, putting your actual username, password and database inside of the ones already written. Then run it.
       
-4- Now everything is done ! You can run the main app and go see it on your localhost !!
+4- Now everything is done ! You can run the file main_app.py and go see it on your localhost !!
 
