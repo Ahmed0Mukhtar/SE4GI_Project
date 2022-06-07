@@ -73,29 +73,18 @@ def wateruses(val):
 
 data_clean['Safe_uses']=data_clean.apply(lambda row: wateruses(row['Water_class']),axis=1)
 
-
-#%%
-
-# a back-up database is stored in a csv file
-data_clean.to_csv(r'C:/Users/abbma/Documents/Software/projet/test-ahmedClean_db.txt')
-
 # from Pandas DataFrame to GeoPandas GeoDataFrame
 data_gdf = gpd.GeoDataFrame(data_clean, geometry=gpd.points_from_xy(data_clean['longitude'], data_clean['latitude']), crs="EPSG:4326")
-# setting up the reference system for the geodesic coordinates in WGS84
-#data_gdf.set_crs(epsg=32618)
 
 #%%
 
 """ EXPORTING DATA TO DBMS """
 """------------------------"""
 # setup db connection (generic connection path to be update with your credentials:
+#'postgresql://<username>:<password>d@localhost:5432/<DATABASE_NAME>'
 
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/se4g')
 
 # data_df.to_sql('BRWC water quality monitoring', engine, if_exists = 'replace', index=False)
 
 data_gdf.to_postgis('PRWC', engine, if_exists = 'replace', index=False)
-
-#%%
-
-data_clean = gpd.GeoDataFrame.from_postgis('PRWC', engine, geom_col='geometry')
