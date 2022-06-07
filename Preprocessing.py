@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Spyder Editor
+@author: Group7
 
 This is a temporary script file.
 """
