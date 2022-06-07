@@ -36,8 +36,7 @@ data_map['colors']=colors
 TOOLTIPS = [
     ("Reference gauge ", "@Nearest_USGS"),
     ("Date of aquisition of the sample", "@Date"),
-    ("Bacteria level (MPN/100ml)", "@Bacteria_MPNper100ml"),
-    ("Safe for ", "@Safe_uses")
+    ("Bacteria level (MPN/100ml)", "@Bacteria_MPNper100ml")
     ]
 
 cds = ColumnDataSource(data_map)
