@@ -40,14 +40,17 @@ data_df = data_df.set_axis(['Location', 'Sample:regular', 'Date', 'Time', 'Neare
 data_df['latitude'] = pd.to_numeric(data_df['latitude'], errors='coerce')
 data_df['longitude'] = pd.to_numeric(data_df['longitude'], errors='coerce')
 data_df['accuracy'] = pd.to_numeric(data_df['accuracy'], errors='coerce')
-data_df = data_df.loc[data_df['accuracy']<=5]
+data_df['Date'] = pd.to_datetime(data_df['Date'], errors='coerce')
 
+data_df = data_df.loc[data_df['accuracy']<=5]
+data_df = data_df.sort_values(by=['Date'], ascending=True)
 #removing weird values from bacteria concentration column
 data_clean=data_df
 data_clean['Bacteria_MPNper100ml'] = data_df['Bacteria_MPNper100ml'].mask(data_df['Bacteria_MPNper100ml']=='2420+',2420)
 data_clean['Bacteria_MPNper100ml'] = pd.to_numeric(data_clean['Bacteria_MPNper100ml'], errors='coerce')
-data_clean  = data_clean[data_df['Bacteria_MPNper100ml'].notnull()]
+data_clean  = data_clean.fillna(0)
 
+#%%
 #creating a function for classifying water per bacteria concentration
 def waterclass(val):
     if val<=235:
@@ -62,11 +65,11 @@ data_clean['Water_class']=data_clean.apply(lambda row: waterclass(row['Bacteria_
 #creating a function for classifying water per bacteria concentration
 def wateruses(val):
     if val == 0:
-        return ('Swimming','Wading','Fishing','Boating')
+        return 'Swimming','Wading','Fishing','Boating'
     elif val == 1:
-        return ('Boating','Fishing')
+        return 'Boating','Fishing'
     elif val==2 :
-        return ('')
+        return 'Danger ! Unsafe for swimming, boating, fishing or wading'
 
 data_clean['Safe_uses']=data_clean.apply(lambda row: wateruses(row['Water_class']),axis=1)
 
