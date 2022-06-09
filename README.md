@@ -21,7 +21,7 @@
 
 4 - In the file preprocessing.py, modify the line 86, putting your actual username, password and database name for accessing your Postgres Database instead of the ones already written. Then run it.
 
-5 - Run the schema.py, after changing the username, password, and database name line 
+5 - Run the schema.py, after changing the username, password, and database name lines 60 and 82.
       
 6 - Now everything is done ! You can run the file main_app.py and go see it on your localhost !!
 
